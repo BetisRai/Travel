@@ -1,15 +1,22 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import './App.css'
+import BookTicket from './pages/bookTicket'
+import ListAvailable from './pages/listAvailable'
 import UserHome from './pages/userHome'
+import { Provider } from 'react-redux'
+import { store } from './store/store'
 
 function App() {
 
   return (
-    <Router>
-      <Routes>
-        <Route path='/' element={<UserHome />} />
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          <Route path='/' element={<UserHome />} />
+          <Route path='/list' element={<ListAvailable />} />
+          <Route path='/book' element={<BookTicket />} />
 
-        {/* <Route path='/check' element={<UserHome />}>
+          {/* <Route path='/check' element={<UserHome />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Login />} />
         </Route>
@@ -19,8 +26,10 @@ function App() {
         <Route path='/user' element={<></>} >
 
         </Route> */}
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </Provider>
+
   )
 }
 
