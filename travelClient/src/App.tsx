@@ -5,6 +5,8 @@ import ListAvailable from './pages/listAvailable'
 import UserHome from './pages/userHome'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
+import Login from './pages/login'
+import Home from './pages/home'
 
 function App() {
 
@@ -15,17 +17,17 @@ function App() {
           <Route path='/' element={<UserHome />} />
           <Route path='/list' element={<ListAvailable />} />
           <Route path='/book' element={<BookTicket />} />
-
-          {/* <Route path='/check' element={<UserHome />}>
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Login />} />
-        </Route>
-        <Route path='/admin' element={<></>}>
-          <Route path="/" element={<DashboardLayout />} />
-        </Route>
-        <Route path='/user' element={<></>} >
 
-        </Route> */}
+          <Route path='/check' element={<Home />} />
+          <Route path="/register" element={<Login />} />
+          {/* </Route> */}
+          {/* <Route path='/admin' element={<></>}>
+            <Route path="/" element={<DashboardLayout />} />
+          </Route> */}
+          {/* <Route path='/user' element={<></>} >
+
+          </Route> */}
         </Routes>
       </Router>
     </Provider>

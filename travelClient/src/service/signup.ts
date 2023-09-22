@@ -1,14 +1,30 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
-export const singup = async (val: signupInterface) => {
+export const singup = async ({
+  userName,
+  password,
+  reEnterPassword,
+  userEmail,
+  active,
+  role,
+}: signupInterface) => {
   try {
     const response = await axios.post("http://localhost:3000/signup", {
-      val,
+      userName,
+      password,
+      reEnterPassword,
+      userEmail,
+      active,
+      role,
     });
     if (response) {
       return response?.data;
     }
-  } catch (error) {
-    throw new Error("Error fetching data:", error);
+  } catch (e) {
+    const errors = e as Error | AxiosError;
+    if (!axios.isAxiosError(e)) {
+      console.log("axios error");
+      // do whatever you want with native error
+    }
   }
 };

@@ -1,36 +1,14 @@
+// Download the helper library from https://www.twilio.com/docs/node/install
+// Find your Account SID and Auth Token at twilio.com/console
+// and set the environment variables. See http://twil.io/secure
+const accountSid = "AC5653502143301170ab8f4384ea5afb10";
+const authToken = "41e71457bb85f437dc2eb302a7098707";
+const client = require('twilio')(accountSid, authToken);
 
-const nodemailer = require('nodemailer');
-const emailConfig = require('../config/email.config')
-
-const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    auth: {
-        user: "kenneth.willms52@ethereal.email",
-        pass: "mww7MfytF6HaHwaPdK"
-    }
-});
-
-exports.sendMail = async (params) => {
-    try {
-        let info = await transporter.sendMail({
-            from: emailConfig.email,
-            to: params.to,
-            subject: 'Hello ✔',
-            html: `
-            <div
-              class="container"
-              style="max-width: 90%; margin: auto; padding-top: 20px"
-            >
-              <h2>Welcome to the club.</h2>
-              <h4>You are officially In ✔</h4>
-              <p style="margin-bottom: 30px;">Pleas enter the sign up OTP to get started</p>
-              <h1 style="font-size: 40px; letter-spacing: 2px; text-align:center;">${params.OTP}</h1>
-         </div>
-          `,
-        });
-        return info;
-    } catch (error) {
-        console.log("email error", error);
-    }
-}
+client.messages
+    .create({
+        body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
+        from: '+1 517 901 1229',
+        to: '+977 981 1973759'
+    })
+    .then(message => console.log(message.sid));

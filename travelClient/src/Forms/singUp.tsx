@@ -1,13 +1,31 @@
-import { Button, Form, Input } from 'antd'
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { Button, Form, Input, message } from 'antd';
+import { singup } from '../service/signup';
 
 const SingUp = () => {
 
-    const onFinish = (values: signinInterface) => {
-        console.log("values is ", values);
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const onFinish = async (values: signupInterface) => {
+        if (values.password !== values.reEnterPassword) {
+            void messageApi.error("Password should be same")
+        }
+        const res = await singup({
+            password: values.password,
+            reEnterPassword: values.reEnterPassword,
+            userEmail: values.userEmail,
+            userName: values.userName,
+            active: values.active,
+            role: values.role
+        })
+
+        if (res) {
+            console.log("response data is", res);
+        }
     }
 
     const onFinishFailed = (error: any) => {
-        console.log("log error is ", error);
+        console.log("enter all the data");
     }
 
     return (
@@ -21,6 +39,7 @@ const SingUp = () => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
+            {contextHolder}
             <Form.Item
                 label="User Email"
                 name="userEmail"
@@ -37,8 +56,16 @@ const SingUp = () => {
                 <Input />
             </Form.Item>
             <Form.Item
-                label="Password"
+                label="Create password"
                 name="password"
+                rules={[{ required: true, message: 'Please input your userEmail!', }]}
+            >
+                <Input.Password />
+            </Form.Item>
+
+            <Form.Item
+                label="Enter password again"
+                name="reEnterPassword"
                 rules={[{ required: true, message: 'Please input your userEmail!', }]}
             >
                 <Input.Password />

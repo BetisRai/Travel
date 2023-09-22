@@ -1,5 +1,5 @@
-import { Button, DatePicker, Form, Input, Typography } from 'antd'
-import dayjs from 'dayjs'
+import { Button, DatePicker, Form, Input, Typography } from 'antd';
+import dayjs from 'dayjs';
 
 const { Title } = Typography;
 
