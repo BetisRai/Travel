@@ -1,22 +1,18 @@
-import { Button, Checkbox, Form, Input, message } from "antd";
-import { useNavigate } from "react-router-dom";
-import { setItem } from "../localstorage/storage";
-import { singin } from "../service/singnin";
+import { Button, Form, Input, message } from "antd";
+import { addbus } from "../service/bus";
 
-const SingnIn = () => {
+const AddBus = () => {
   const [messageApi, contextHolder] = message.useMessage();
-
-  const navigate = useNavigate();
 
   const onFinish = async (values: any) => {
     try {
-      const res = await singin({
-        useremail: values.useremail,
-        password: values.password,
+      const res = await addbus({
+        busname: values.busname,
+        busno: values.busno,
+        seats: values.seats,
       });
       if (res) {
-        setItem("token", res.accessToken);
-        navigate("/admin");
+        messageApi.success("Bus added");
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);
@@ -36,13 +32,12 @@ const SingnIn = () => {
     >
       {contextHolder}
       <Form.Item
-        label="userEmail"
-        name="useremail"
+        label="Bus no"
+        name="busno"
         rules={[
           {
             required: true,
-            message: "Please input your userEmail!",
-            type: "email",
+            message: "Please input your bus no!",
           },
         ]}
       >
@@ -50,28 +45,28 @@ const SingnIn = () => {
       </Form.Item>
 
       <Form.Item
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: "Please input your password!" }]}
+        label="Bus Name"
+        name="busname"
+        rules={[{ required: true, message: "Please input your busname!" }]}
       >
-        <Input.Password />
+        <Input />
       </Form.Item>
 
       <Form.Item
-        name="remember"
-        valuePropName="checked"
-        wrapperCol={{ offset: 8, span: 16 }}
+        label="Total Seats"
+        name="seats"
+        rules={[{ required: true, message: "Please input your seats" }]}
       >
-        <Checkbox>Remember me</Checkbox>
+        <Input />
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
-          Login
+          Add bus
         </Button>
       </Form.Item>
     </Form>
   );
 };
 
-export default SingnIn;
+export default AddBus;

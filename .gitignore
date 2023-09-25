@@ -1,4 +1,6 @@
 /travelApi/dist
+/travelApi/.env
 /travelApi/node_modules
 
 /travelClient/node_modules
+

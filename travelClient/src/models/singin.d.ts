@@ -1,4 +1,4 @@
 interface signinInterface {
-  userEmail: string;
+  useremail: string;
   password: string;
 }

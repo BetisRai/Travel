@@ -7,6 +7,7 @@ export const singup = async ({
   userEmail,
   active,
   role,
+  number
 }: signupInterface) => {
   try {
     const response = await axios.post("http://localhost:3000/signup", {
@@ -16,6 +17,7 @@ export const singup = async ({
       userEmail,
       active,
       role,
+      number
     });
     if (response) {
       return response?.data;
@@ -23,8 +25,8 @@ export const singup = async ({
   } catch (e) {
     const errors = e as Error | AxiosError;
     if (!axios.isAxiosError(e)) {
-      console.log("axios error");
-      // do whatever you want with native error
+      throw errors
     }
+    throw errors
   }
 };

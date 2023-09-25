@@ -7,13 +7,12 @@ const checkDuplicateUsernameOrEmail = async (req, res, next) => {
 
         const userName = req.body.userName;
         const userEmail = req.body.userEmail;
-
+        
         const searchUserNameQuery = `SELECT username FROM users WHERE username = $1 `;
         const searchUserEmailQuery = `SELECT useremail FROM users WHERE useremail = $1 `;
 
         const userNameResult = await client.query(searchUserNameQuery, [userName]);
         const userEmailResult = await client.query(searchUserEmailQuery, [userEmail]);
-
 
         if (userNameResult.rows.length > 0) {
             return res.status(400).send({

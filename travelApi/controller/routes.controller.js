@@ -1,98 +1,138 @@
 const client = require("../db");
+const crypto = require("crypto");
+const { generateSeats } = require("../service/seats");
 
 exports.routes = async (req, res) => {
-    try {
-        const insertRouteQuery = ` INSERT INTO routes (busno , busname, fromplace, toplace, date, seats) VALUES ($1,$2,$3, $4, $5,$6)`;
-        const routesInfo = [req.body.busno, req.body.busname, req.body.fromplace, req.body.toplace, req.body.date, req.body.seats];
+  try {
+    const insertRouteQuery = ` INSERT INTO routes (busno , busname, fromplace, toplace, date, seats) VALUES ($1,$2,$3, $4, $5,$6)`;
+    const routesInfo = [
+      req.body.busno,
+      req.body.busname,
+      req.body.fromplace,
+      req.body.toplace,
+      req.body.date,
+      req.body.seats,
+    ];
 
+    const searchRelativeRoutes = `SELECT * FROM routes WHERE busno=$1 AND date=$2`;
+    const routesResult = await client.query(searchRelativeRoutes, [
+      req.body.busno,
+      req.body.date,
+    ]);
 
-        const searchRelativeRoutes = `SELECT * FROM routes WHERE busno=$1 AND date=$2`
-        const routesResult = await client.query(searchRelativeRoutes, [req.body.busno, req.body.date,]);
-
-        if (routesResult.rows.length > 0) {
-            return res.status(400).send({
-                message: 'Bus route already exists'
-            })
-        } else {
-            const result = await client.query(insertRouteQuery, routesInfo)
-            if (result) {
-                return res.send({
-                    message: "Routes Registered"
-                })
-            }
-        }
-    } catch (error) {
-        console.log("error is", error);
+    if (routesResult.rows.length > 0) {
+      return res.status(400).send({
+        message: "Bus route already exists",
+      });
+    } else {
+      const result = await client.query(insertRouteQuery, routesInfo);
+      if (result) {
         return res.send({
-            message: "Error occured"
-        })
+          message: "Routes Registered",
+        });
+      }
     }
-}
+  } catch (error) {
+    console.log("error is", error);
+    return res.send({
+      message: "Error occured",
+    });
+  }
+};
 
+exports.getallRoutes = async (req, res) => {
+  try {
+    const getRouteQuery = `SELECT * FROM routes`;
+    const allRoutesResult = await client.query(getRouteQuery, []);
 
-exports.getRoutes = async (req, res) => {
-    try {
-        const getRouteQuery = `SELECT * FROM routes`;
-        const allRoutesResult = await client.query(getRouteQuery, []);
-        res.json(allRoutesResult.rows);
-    } catch (error) {
-        console.log("error is", error);
-        return res.send({
-            message: "Error occured"
-        })
+    if (allRoutesResult) {
+      return res.status(200).send({
+        data: allRoutesResult.rows,
+      });
     }
-}
+  } catch (error) {
+    console.log("error is", error);
+    return res.send({
+      message: "Error occured",
+    });
+  }
+};
 
 exports.getRoutesById = async (req, res) => {
-    try {
+  try {
+    const searchRelativeRoutes = `SELECT * FROM routes WHERE id = $1`;
+    const routesResult = await client.query(searchRelativeRoutes, [
+      req.body.id,
+    ]);
 
-        const searchRelativeRoutes = `SELECT * FROM routes WHERE busno=$1 AND date=$2`
-        const routesResult = await client.query(searchRelativeRoutes, [req.body.busno, req.body.date,]);
-
-        if (routesResult.rows.length > 0) {
-            return res.json(routesResult.rows);
-        } else {
-            return res.send({
-                message: "Routes Not found"
-            })
-        }
-    } catch (error) {
-        return res.send({
-            message: "Error occured"
-        })
+    if (routesResult.rows.length > 0) {
+      return res.status(200).send({
+        data: routesResult.rows,
+      });
+    } else {
+      return res.status(400).send({
+        message: "Routes Not found",
+      });
     }
-}
+  } catch (error) {
+    return res.send({
+      message: "Error occured",
+    });
+  }
+};
 
-exports.getFromPlace = async (req, res) => {
-    try {
-        const getColumnForm = `SELECT fromplace FROM routes`;
+exports.addRoutes = async (req, res, next) => {
+  try {
+    const addRoutesQuery = `INSERT INTO routes (id,busid,date,seats,fromplace, toplace, time, price, arrival) VALUES ($1, $2,$3,$4, $5, $6,$7,$8, $9)`;
+    const getSeats = `SELECT seats FROM bus WHERE id = $1;`;
+    const getBusSeats = await client.query(getSeats, [req.body.busid]);
+    const routesInfo = [
+      crypto.randomUUID(),
+      req.body.busid,
+      req.body.date,
+      generateSeats(getBusSeats.rows[0].seats),
+      req.body.fromplace,
+      req.body.toplace,
+      req.body.time,
+      req.body.price,
+      req.body.arrival,
+    ];
 
-        const routesResult = await client.query(getColumnForm, []);
+    const routesResult = await client.query(addRoutesQuery, routesInfo);
 
-        if (routesResult.rows.length > 0) {
-            return res.json(routesResult.rows);
-        }
-    } catch (error) {
-        console.log("error is", error);
-        return res.send({
-            message: "Error occured"
-        })
+    if (routesResult) {
+      return res.status(200).send({
+        message: "Routes added succesfully",
+      });
     }
-}
+  } catch (error) {
+    console.log("error is", error);
+    return res.status(400).send({
+      message: "Error occured",
+    });
+  }
+};
 
-exports.getToPlace = async (req, res) => {
-    try {
-        const getColumnForm = `SELECT toplace FROM routes`;
+exports.searchRoutes = async (req, res, next) => {
+  try {
+    const searchQuery = `SELECT * FROM routes WHERE fromplace = $1 AND toplace = $2 AND date = $3 ;`;
+    const searchInfo = [req.body.fromplace, req.body.toplace, req.body.date];
 
-        const routesResult = await client.query(getColumnForm, []);
+    const routesResult = await client.query(searchQuery, searchInfo);
 
-        if (routesResult.rows.length > 0) {
-            return res.json(routesResult.rows);
-        }
-    } catch (error) {
-        console.log("error is", error);
-        return res.send({
-            message: "Error occured"
-        })
+    if (routesResult.rows.length > 0) {
+      return res.status(200).send({
+        data: routesResult.rows,
+      });
+    } else {
+      return res.status(200).send({
+        message: "Routes not found",
+      });
     }
-}
+  } catch (error) {
+    console.log("error is", error);
+    return res.status(400).send({
+      message: "Error occured",
+    });
+  }
+};
