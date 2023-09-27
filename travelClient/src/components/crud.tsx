@@ -5,7 +5,7 @@ import { useState } from "react";
 interface busTypes {
   cols: ColumnsType<any>;
   data: any[];
-  addForm: React.ReactNode | any;
+  addForm?: React.ReactNode | any;
 }
 
 const CrudTable = ({ cols, addForm, data }: busTypes) => {
@@ -14,14 +14,16 @@ const CrudTable = ({ cols, addForm, data }: busTypes) => {
   return (
     <div>
       <Row justify={"end"}>
-        <Button
-          type="primary"
-          onClick={() => {
-            setOpenModal(true);
-          }}
-        >
-          Add
-        </Button>
+        {addForm && (
+          <Button
+            type="primary"
+            onClick={() => {
+              setOpenModal(true);
+            }}
+          >
+            Add
+          </Button>
+        )}
       </Row>
       <br />
       <Modal

@@ -1,5 +1,4 @@
 import { Button, Card, Col, Row, Space, Typography } from "antd";
-import dayjs from "dayjs";
 
 interface routesProps {
   busLogo: string;

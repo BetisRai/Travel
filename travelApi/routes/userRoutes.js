@@ -4,6 +4,8 @@ const busController = require("./../controller/bus.controller");
 
 const verifyBus = require("../middleware/verifyBus");
 const authJwt = require("../middleware/authJwt");
+const { khalti } = require("../controller/payment.controller");
+const { buyticket, alltickets } = require("../controller/tickets.controller");
 
 const router = express.Router();
 
@@ -14,25 +16,14 @@ router.route("/deletebus").post(busController.deletebus);
 router.route("/getallbus").get(busController.getallbus);
 
 router.route("/addroutes").post(routesController.addRoutes);
-router
-  .route("/getallroutes")
-  .get([authJwt.verifyToken], routesController.getallRoutes);
+router.route("/getallroutes").get(routesController.getallRoutes);
+
+// .get([authJwt.verifyToken], routesController.getallRoutes);
 router.route("/searchroutes").post(routesController.searchRoutes);
 router.route("/routesbyid").post(routesController.getRoutesById);
 
-// router
-//   .route("/routes")
-//   .post(routesController.routes)
-//   .get(routesController.getRoutes);
-
-// router.route("/toplace").get(routesController.getToPlace);
-
-// router.route("/fromplace").get(routesController.getFromPlace);
-
-// router
-//     .route('/:id')
-//     .get(routesController.getUser)
-//     .patch(routesController.updateUser)
-//     .delete(routesController.deleteUser);
+router.route("/payment").post(khalti);
+router.route("/ticket").post(buyticket);
+router.route("/alltickets").post(alltickets);
 
 module.exports = router;

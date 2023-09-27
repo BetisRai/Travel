@@ -9,11 +9,14 @@ import {
 } from "@ant-design/icons";
 import { Button, Col, Layout, Menu, Row, Space, theme } from "antd";
 import React, { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { removeItem } from "../localstorage/storage";
 
 const { Header, Sider, Content } = Layout;
 
 const DashboardLayout: React.FC = () => {
+  const navigate = useNavigate();
+
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -95,7 +98,13 @@ const DashboardLayout: React.FC = () => {
             </Col>
 
             <Col offset={21}>
-              <Button type="default">
+              <Button
+                type="default"
+                onClick={() => {
+                  removeItem("token");
+                  navigate("/");
+                }}
+              >
                 <Space>
                   Logout
                   <LogoutOutlined />

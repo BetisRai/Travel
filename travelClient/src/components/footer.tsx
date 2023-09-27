@@ -1,11 +1,30 @@
-import React from 'react'
+import {
+  FacebookOutlined,
+  InstagramOutlined,
+  LinkedinOutlined,
+  TwitterOutlined,
+} from "@ant-design/icons";
+import { Col, Row } from "antd";
 
 const FooterLayout = () => {
-    return (
-        <div>
-            This is a footerLayout all we need
-        </div>
-    )
-}
+  return (
+    <div>
+      <Row justify={"center"}>
+        <Col>Welcome to Travel</Col>
+      </Row>
+      <br></br>
+      <Row justify={"center"}>
+        <Col>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <FacebookOutlined />
+            <TwitterOutlined />
+            <LinkedinOutlined />
+            <InstagramOutlined />
+          </div>
+        </Col>
+      </Row>
+    </div>
+  );
+};
 
-export default FooterLayout
+export default FooterLayout;

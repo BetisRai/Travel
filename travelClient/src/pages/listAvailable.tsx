@@ -1,17 +1,15 @@
+import { Col, Row, message } from "antd";
 import { useSelector } from "react-redux";
-import RoutesCard from "../components/routesCard";
-import { RootState } from "../store/store";
-import { Col, Row } from "antd";
 import { useNavigate } from "react-router-dom";
+import RoutesCard from "../components/routesCard";
+import { getItem } from "../localstorage/storage";
+import { RootState } from "../store/store";
 
 const ListAvailable = () => {
   const rotuesList = useSelector((state: RootState) => state.routes.routes);
-  console.log(
-    "🚀 ~ file: listAvailable.tsx:7 ~ ListAvailable ~ rotuesList:",
-    rotuesList
-  );
 
   const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
 
   return (
     <Row
@@ -20,6 +18,7 @@ const ListAvailable = () => {
       style={{ marginTop: "5rem", backgroundColor: "lightgrey" }}
     >
       <Col span={18}>
+        {contextHolder}
         {rotuesList.map((val: any) => (
           <RoutesCard
             arrivalPlace={val.toplace}
@@ -33,7 +32,12 @@ const ListAvailable = () => {
             depatureTime={val.date}
             id={val.id}
             onBook={(id: string) => {
-              navigate(`/routes/${id}`);
+              let token = getItem("token");
+              if (!token) {
+                messageApi.error("Please sign in first");
+              } else {
+                navigate(`/routes/${id}`);
+              }
             }}
           />
         ))}
