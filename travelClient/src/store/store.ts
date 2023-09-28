@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import routesSlice from "./routes";
+import user from "./user";
 
 export const store = configureStore({
   reducer: {
     routes: routesSlice,
+    user: user,
   },
 });
 

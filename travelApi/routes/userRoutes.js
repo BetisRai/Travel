@@ -5,7 +5,13 @@ const busController = require("./../controller/bus.controller");
 const verifyBus = require("../middleware/verifyBus");
 const authJwt = require("../middleware/authJwt");
 const { khalti } = require("../controller/payment.controller");
-const { buyticket, alltickets } = require("../controller/tickets.controller");
+const {
+  buyticket,
+  alltickets,
+  getticketsById,
+  cancelTickets,
+  verifyTicketsCancel,
+} = require("../controller/tickets.controller");
 
 const router = express.Router();
 
@@ -23,7 +29,11 @@ router.route("/searchroutes").post(routesController.searchRoutes);
 router.route("/routesbyid").post(routesController.getRoutesById);
 
 router.route("/payment").post(khalti);
+
 router.route("/ticket").post(buyticket);
 router.route("/alltickets").post(alltickets);
+router.route("/ticketsbyid").post(getticketsById);
+router.route("/cancel").post(cancelTickets);
+router.route("/verifycancel").post(verifyTicketsCancel);
 
 module.exports = router;

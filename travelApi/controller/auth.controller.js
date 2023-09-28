@@ -9,8 +9,8 @@ const { error } = require("console");
 exports.signup = async (req, res, next) => {
   try {
     const smsClient = require("twilio")(
-      "AC5653502143301170ab8f4384ea5afb10",
-      "d7bc62df58b3019d5a6f4d69ad7d41e9"
+      process.env.TWILIO_ACCOUNT_SID,
+      process.env.TWILIO_AUTH_TOKEN
     );
 
     const otpGenerated = optGenerator.generateOTP();
@@ -30,7 +30,7 @@ exports.signup = async (req, res, next) => {
 
     const message = await smsClient.messages.create({
       body: `Your otp is ${otpGenerated}`,
-      from: "+1 517 901 1229",
+      from: "+14346029065",
       to: numberwithcode,
     });
 
@@ -63,7 +63,7 @@ exports.signin = async (req, res, next) => {
       });
     }
 
-    const searchUserEmailQuery = `SELECT username FROM users WHERE useremail = $1 `;
+    const searchUserEmailQuery = `SELECT * FROM users WHERE useremail = $1 `;
     const searchPasswordQuery = `SELECT password FROM users WHERE useremail = $1 `;
     const serachStatusQuery = `SELECT isactive FROM users WHERE useremail = $1 `;
 
@@ -105,6 +105,8 @@ exports.signin = async (req, res, next) => {
         return res.status(200).send({
           email: userEmail,
           accessToken: token,
+          userType: userEmail === "super@gmail.com" ? "admin" : "user",
+          data: searchUserEmailResult.rows[0],
         });
       }
     } else {

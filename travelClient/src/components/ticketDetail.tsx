@@ -11,6 +11,7 @@ import {
   message,
 } from "antd";
 import { useState } from "react";
+import { getItem } from "../localstorage/storage";
 import { buyTickets } from "../service/tickets";
 import SeatSelect from "./seatSelect";
 
@@ -65,7 +66,10 @@ const TicketDetail = ({
   const handlePayment = async () => {
     if (totalSeat === 0) {
       messageApi.error("Please select seat");
+      return;
     }
+
+    const userid = getItem("userid");
 
     try {
       const res = await buyTickets({
@@ -76,15 +80,19 @@ const TicketDetail = ({
         seats: selectedSeat,
         toplace: arrivalPlace,
         totalamount: String(Number(price) * totalSeat),
+        userid: userid ?? "",
       });
       if (res) {
+        messageApi.success("Please pay for the ticket first");
         window.open(
           "https://test-pay.khalti.com/?pidx=YPZsoS86PpBh9SCEVMgWHL",
           "_blank",
           "noreferrer"
         );
       }
-    } catch (error) {}
+    } catch (error) {
+      messageApi.error("Error");
+    }
   };
 
   return (

@@ -1,11 +1,12 @@
 import type { MenuProps } from "antd";
 import { Layout, Menu, Modal, Space, theme } from "antd";
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import SingUp from "../../Forms/singUp";
 import SingnIn from "../../Forms/singnIn";
 import FooterLayout from "../../components/footer";
 import Logo from "../../components/logo";
+import { getItem, removeItem } from "../../localstorage/storage";
 
 const { Header, Content, Footer } = Layout;
 
@@ -13,6 +14,10 @@ const UserHome: React.FC = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const navigate = useNavigate();
+
+  const userType = getItem("user");
 
   const [openRegisterModal, setOpenRegisterModal] = useState<boolean>(false);
   const [signinModal, setOpenSigninModal] = useState<boolean>(false);
@@ -36,12 +41,38 @@ const UserHome: React.FC = () => {
         setOpenRegisterModal(true);
       },
     },
+    {
+      key: "tickets",
+      label: "Tickets",
+      disabled: userType === "user" ? false : true,
+      onClick: () => {
+        const userid = getItem("userid");
+        navigate(`/ticketlists/${userid}`);
+      },
+    },
+    {
+      key: "logout",
+      label: "Logout",
+      disabled: userType === "user" ? false : true,
+      onClick: () => {
+        removeItem("user");
+        removeItem("token");
+        navigate(0);
+      },
+    },
   ];
 
   return (
     <Layout>
       <Space style={{ justifyContent: "space-between" }}>
-        <div>
+        <div
+          onClick={() => {
+            navigate("/");
+          }}
+          style={{
+            cursor: "pointer",
+          }}
+        >
           <Logo />
         </div>
         <Header
@@ -49,7 +80,7 @@ const UserHome: React.FC = () => {
             display: "flex",
             alignItems: "flex-end",
             backgroundColor: "inherit",
-            width: "500px",
+            width: "600px",
           }}
         >
           <Menu
@@ -59,7 +90,7 @@ const UserHome: React.FC = () => {
           />
         </Header>
       </Space>
-      <Layout>
+      <Layout style={{ minHeight: "60vh" }}>
         <Outlet />
       </Layout>
 

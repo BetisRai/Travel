@@ -12,6 +12,7 @@ import ListAvailable from "./pages/listAvailable";
 import { default as UserHomeSearch } from "./pages/user pages/home";
 import UserHome from "./pages/user pages/userHome";
 import { store } from "./store/store";
+import TicketList from "./pages/user pages/ticketList";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/" element={<UserHomeSearch />} />
             <Route path="/routes" element={<ListAvailable />} />
             <Route path="/routes/:id" element={<BookTicket />} />
+            <Route path="/ticketlists/:id" element={<TicketList />} />
           </Route>
           <Route
             path="admin"

@@ -125,7 +125,7 @@ exports.searchRoutes = async (req, res, next) => {
         data: routesResult.rows,
       });
     } else {
-      return res.status(200).send({
+      return res.status(400).send({
         message: "Routes not found",
       });
     }

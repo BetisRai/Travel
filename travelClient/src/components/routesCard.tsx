@@ -33,7 +33,7 @@ const RoutesCard = ({
       bordered={false}
       style={{
         width: "80%",
-        margin: "1rem",
+        margin: "1rem auto",
         boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
       }}
     >

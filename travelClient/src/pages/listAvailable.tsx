@@ -7,6 +7,10 @@ import { RootState } from "../store/store";
 
 const ListAvailable = () => {
   const rotuesList = useSelector((state: RootState) => state.routes.routes);
+  console.log(
+    "🚀 ~ file: listAvailable.tsx:10 ~ ListAvailable ~ rotuesList:",
+    rotuesList
+  );
 
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
