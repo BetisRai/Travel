@@ -20,7 +20,7 @@ const imageStyle: React.CSSProperties = {
 
 const CarouselImage = () => {
   return (
-    <Carousel effect="fade">
+    <Carousel effect="fade" autoplay autoplaySpeed={5000}>
       <div>
         <h3 style={contentStyle}>
           <img src={img1} alt="" style={imageStyle} />

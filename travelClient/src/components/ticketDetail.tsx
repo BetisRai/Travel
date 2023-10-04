@@ -10,10 +10,11 @@ import {
   Typography,
   message,
 } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getItem } from "../localstorage/storage";
 import { buyTickets } from "../service/tickets";
 import SeatSelect from "./seatSelect";
+import { getUserdata } from "../service/dashboard";
 
 interface ticketDetailProps {
   busLogo: string;
@@ -49,6 +50,7 @@ const TicketDetail = ({
   const [totalSeat, setTotalSeat] = useState<number>(0);
   const [messageApi, contextHolder] = message.useMessage();
   const [selectedSeat, setselectedSeat] = useState<string>("");
+  const [userData, setUserData] = useState<any>();
 
   const handleAddInsurance = () => {
     setIsInsuranceAdd((prevValue) => !prevValue);
@@ -63,13 +65,29 @@ const TicketDetail = ({
     setTotalSeat(seatCount);
   };
 
+  const userid = getItem("userid");
+
+  const getUserData = async (id: string) => {
+    try {
+      const res = await getUserdata(id);
+      if (res) {
+        setUserData(res.data[0]);
+      }
+    } catch (error: any) {
+      messageApi.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    userid && getUserData(userid);
+    return () => {};
+  }, []);
+
   const handlePayment = async () => {
     if (totalSeat === 0) {
       messageApi.error("Please select seat");
       return;
     }
-
-    const userid = getItem("userid");
 
     try {
       const res = await buyTickets({
@@ -181,7 +199,7 @@ const TicketDetail = ({
                       {"Name :"}
                     </Typography.Title>
                     <Typography.Paragraph style={{ zIndex: "1" }}>
-                      {"Personal details"}
+                      {userData?.username}
                     </Typography.Paragraph>
                   </Space>
                 </Col>
@@ -191,7 +209,7 @@ const TicketDetail = ({
                       {"Address :"}
                     </Typography.Title>
                     <Typography.Paragraph style={{ zIndex: "1" }}>
-                      {"Personal details"}
+                      {"Kathmandu"}
                     </Typography.Paragraph>
                   </Space>
                 </Col>
@@ -202,7 +220,7 @@ const TicketDetail = ({
                       {"Email :"}
                     </Typography.Title>
                     <Typography.Paragraph style={{ zIndex: "1" }}>
-                      {"Personal details"}
+                      {userData?.useremail}
                     </Typography.Paragraph>
                   </Space>
                 </Col>
@@ -213,7 +231,7 @@ const TicketDetail = ({
                       {"Contact number :"}
                     </Typography.Title>
                     <Typography.Paragraph style={{ zIndex: "1" }}>
-                      {"Personal details"}
+                      {userData?.usernumber}
                     </Typography.Paragraph>
                   </Space>
                 </Col>

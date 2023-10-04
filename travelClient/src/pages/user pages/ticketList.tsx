@@ -6,18 +6,17 @@ import {
   Input,
   Modal,
   Row,
-  Space,
   Typography,
   message,
 } from "antd";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getItem } from "../../localstorage/storage";
 import {
   cancelTickets,
   getTicketsByid,
   verifyCancelTickets,
 } from "../../service/tickets";
-import { useNavigate } from "react-router-dom";
 
 const TicketList = () => {
   const [openOtp, setOpenOtp] = useState<boolean>(false);
@@ -83,6 +82,14 @@ const TicketList = () => {
     <div style={{ padding: "2rem" }}>
       <Typography.Title level={3}>Tickets list</Typography.Title>
       {contextHolder}
+
+      {data.length < 1 && (
+        <>
+          <Typography.Title level={4} style={{ color: "lightgrey" }}>
+            Ticket Box Empty
+          </Typography.Title>
+        </>
+      )}
 
       {data.map((val: any) => (
         <>

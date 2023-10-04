@@ -19,6 +19,7 @@ const SearchRoutes = () => {
   const [toPlace, setToPlace] = useState<any>([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -70,6 +71,7 @@ const SearchRoutes = () => {
   }, []);
 
   const handleOnFinish = async (values: any) => {
+    setLoading(true);
     try {
       const res = await searchRoutes({
         date: new Date(values.date.$d).toDateString(),
@@ -81,7 +83,9 @@ const SearchRoutes = () => {
         dispatch(addRoutes(res.data));
         navigate("/routes");
       }
+      setLoading(false);
     } catch (error: any) {
+      setLoading(false);
       messageApi.error(error.response.data.message);
     }
   };
@@ -158,6 +162,7 @@ const SearchRoutes = () => {
           type="primary"
           htmlType="submit"
           style={{ width: "100%", height: "50px" }}
+          loading={loading}
         >
           <Typography.Title
             level={3}

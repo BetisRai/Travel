@@ -11,7 +11,7 @@ exports.buyticket = async (req, res, next) => {
       });
     }
 
-    const insertTicketQuery = ` INSERT INTO tickets (routesid , price, seatcount, totalamount, fromplace, toplace, userid, ticketid, date) VALUES ($1,$2,$3, $4,$5,$6, $7, $8, $9)`;
+    const insertTicketQuery = ` INSERT INTO tickets (routesid , price, seatcount, totalamount, fromplace, toplace, userid, ticketid, date, seats) VALUES ($1,$2,$3, $4,$5,$6, $7, $8, $9, $10)`;
     const routeUpdate = ` UPDATE routes SET seats = $1 WHERE id = $2`;
     const getRoutesSeats = `SELECT seats FROM routes WHERE id = $1`;
 
@@ -25,6 +25,7 @@ exports.buyticket = async (req, res, next) => {
       req.body.userid,
       crypto.randomUUID(),
       new Date().toISOString(),
+      req.body.seats,
     ];
 
     const insertResult = await client.query(insertTicketQuery, routesInfo);
@@ -137,30 +138,56 @@ exports.cancelTickets = async (req, res, next) => {
 
 exports.verifyTicketsCancel = async (req, res, next) => {
   try {
-    if (!req.body.ticketid) {
-      return res.status(400).send({
-        message: "Ticeket id not matched",
-      });
-    }
-
     if (!req.body.otp) {
       return res.status(400).send({
         message: "Please enter otp",
       });
     }
 
+    const selectRows = `SELECT * FROM tickets WHERE  cancelotp = $1`;
     const deleteRows = `DELETE FROM tickets WHERE  cancelotp = $1`;
+    const routeUpdate = ` UPDATE routes SET seats = $1 WHERE id = $2`;
+    const getRoutesSeats = `SELECT seats FROM routes WHERE id = $1`;
 
-    const cancelTicket = await client.query(deleteRows, [req.body.otp]);
-    if (cancelTicket) {
-      return res.status(200).send({
-        message: "Verified sucessfully",
-      });
-    } else {
-      return res.status(400).send({
-        message: "Otp didn't mactched",
-      });
+    const getTicketDetail = await client.query(selectRows, [req.body.otp]);
+
+    if (getTicketDetail) {
+      const getRoutes = await client.query(getRoutesSeats, [
+        getTicketDetail.rows[0].routesid,
+      ]);
+
+      if (getRoutes) {
+        let cancelSeats = JSON.parse(getTicketDetail.rows[0].seats);
+
+        for (let key in cancelSeats) {
+          cancelSeats[key] = false;
+        }
+
+        const updatedRoutes = {
+          ...JSON.parse(getRoutes.rows[0].seats),
+          ...cancelSeats,
+        };
+
+        const insertUpdatedRoutes = await client.query(routeUpdate, [
+          updatedRoutes,
+          getTicketDetail.rows[0].routesid,
+        ]);
+
+        if (insertUpdatedRoutes) {
+          const cancelTicket = await client.query(deleteRows, [req.body.otp]);
+          if (cancelTicket) {
+            return res.status(200).send({
+              message: "Verified sucessfully",
+            });
+          } else {
+            return res.status(400).send({
+              message: "Otp didn't mactched",
+            });
+          }
+        }
+      }
     }
+    next();
   } catch (error) {
     console.log("error ", error);
   }

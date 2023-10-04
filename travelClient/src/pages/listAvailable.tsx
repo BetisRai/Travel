@@ -24,8 +24,8 @@ const ListAvailable = () => {
             arrivalPlace={val.toplace}
             depaturePlace={val.fromplace}
             busLogo="Logo"
-            busName="Shakira"
-            busNumber="00000"
+            busName={val.busname}
+            busNumber={val.busnumber}
             price={val.price ?? 0}
             type="non-stop"
             arrivalTime={val.arrival}

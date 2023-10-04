@@ -42,6 +42,8 @@ router.route("/ticketsbyid").post(getticketsById);
 router.route("/cancel").post(cancelTickets);
 router.route("/verifycancel").post(verifyTicketsCancel);
 
+router.route("/getuser").post(dashboardController.getuserdata);
+
 router.route("/salesdata").get(dashboardController.getsalesdata);
 
 module.exports = router;
