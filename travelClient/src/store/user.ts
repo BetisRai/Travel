@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface userInfoState {
   userid: string;
@@ -12,7 +12,7 @@ export const counterSlice = createSlice({
   name: "counter",
   initialState,
   reducers: {
-    setuser: (state, action) => {
+    setuser: (state, action: PayloadAction<any>) => {
       state.userid = action.payload;
     },
   },

@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { Space, message } from "antd";
 import { useEffect, useState } from "react";
 import AddRoutes from "../../Forms/addroutes";
 import CrudTable from "../../components/crud";
@@ -26,9 +26,48 @@ const columns: any = [
     key: "time",
   },
   {
+    title: "Bus name",
+    dataIndex: "busname",
+    key: "busname",
+  },
+  {
+    title: "Bus number",
+    dataIndex: "busnumber",
+    key: "busno",
+  },
+  {
     title: "Price",
     dataIndex: "price",
     key: "price",
+  },
+  {
+    title: "Total seats",
+    key: "totalseats",
+    render: (_: any, record: any) => {
+      let totalseats = JSON.parse(record.seats);
+      let count = 0;
+
+      for (let key in totalseats) {
+        ++count;
+      }
+      return <Space>{count}</Space>;
+    },
+  },
+  {
+    title: "Remaining seats",
+    dataIndex: "price",
+    key: "remainingseats",
+    render: (_: any, record: any) => {
+      let totalseats = JSON.parse(record.seats);
+      let count = 0;
+
+      for (let key in totalseats) {
+        if (!totalseats[key]) {
+          ++count;
+        }
+      }
+      return <Space>{count}</Space>;
+    },
   },
 ];
 
@@ -56,7 +95,7 @@ const BusRoutes = () => {
   return (
     <div>
       {contextHolder}
-      <CrudTable cols={columns} data={data} addForm={<AddRoutes />} />
+      <CrudTable cols={columns} data={data} addForm={<AddRoutes />} isedit />
     </div>
   );
 };

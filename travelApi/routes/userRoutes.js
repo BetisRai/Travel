@@ -23,6 +23,7 @@ router.route("/getallbus").get(busController.getallbus);
 
 router.route("/addroutes").post(routesController.addRoutes);
 router.route("/getallroutes").get(routesController.getallRoutes);
+router.route("/addroutesbyid").post(routesController.addRoutesbyid);
 
 // .get([authJwt.verifyToken], routesController.getallRoutes);
 router.route("/searchroutes").post(routesController.searchRoutes);

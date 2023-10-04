@@ -83,7 +83,7 @@ exports.getRoutesById = async (req, res) => {
 
 exports.addRoutes = async (req, res, next) => {
   try {
-    const addRoutesQuery = `INSERT INTO routes (id,busid,date,seats,fromplace, toplace, time, price, arrival) VALUES ($1, $2,$3,$4, $5, $6,$7,$8, $9)`;
+    const addRoutesQuery = `INSERT INTO routes (id,busid,date,seats,fromplace, toplace, time, price, arrival, busname, busnumber) VALUES ($1, $2,$3,$4, $5, $6,$7,$8, $9, $10, $11)`;
     const getSeats = `SELECT seats FROM bus WHERE id = $1;`;
     const getBusSeats = await client.query(getSeats, [req.body.busid]);
     const routesInfo = [
@@ -96,6 +96,8 @@ exports.addRoutes = async (req, res, next) => {
       req.body.time,
       req.body.price,
       req.body.arrival,
+      req.body.busname,
+      req.body.busnumber,
     ];
 
     const routesResult = await client.query(addRoutesQuery, routesInfo);
@@ -127,6 +129,40 @@ exports.searchRoutes = async (req, res, next) => {
     } else {
       return res.status(400).send({
         message: "Routes not found",
+      });
+    }
+  } catch (error) {
+    console.log("error is", error);
+    return res.status(400).send({
+      message: "Error occured",
+    });
+  }
+};
+
+exports.addRoutesbyid = async (req, res, next) => {
+  try {
+    const addRoutesQuery = `UPDATE  routes SET busid = $1,date= $2,seats= $3,fromplace = $4, toplace = $5, time = $6, price= $7, arrival= $8, busname= $9, busnumber= $10  WHERE id = $11`;
+    const getSeats = `SELECT seats FROM bus WHERE id = $1;`;
+    const getBusSeats = await client.query(getSeats, [req.body.busid]);
+    const routesInfo = [
+      req.body.busid,
+      req.body.date,
+      generateSeats(getBusSeats.rows[0].seats),
+      req.body.fromplace,
+      req.body.toplace,
+      req.body.time,
+      req.body.price,
+      req.body.arrival,
+      req.body.busname,
+      req.body.busnumber,
+      req.body.id,
+    ];
+
+    const routesResult = await client.query(addRoutesQuery, routesInfo);
+
+    if (routesResult) {
+      return res.status(200).send({
+        message: "Routes updated succesfully",
       });
     }
   } catch (error) {

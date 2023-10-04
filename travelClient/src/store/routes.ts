@@ -10,7 +10,7 @@ const initialState: routesProps = {
 };
 
 export const routesSlice = createSlice({
-  name: "counter",
+  name: "routes",
   initialState,
   reducers: {
     addRoutes: (state, action: PayloadAction<any>) => {

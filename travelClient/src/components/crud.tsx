@@ -1,15 +1,45 @@
-import { Button, Modal, Row, Space, Table, Tag } from "antd";
+import { EditOutlined } from "@ant-design/icons";
+import { Button, Modal, Row, Space, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { added } from "../store/editid";
 
 interface busTypes {
   cols: ColumnsType<any>;
   data: any[];
   addForm?: React.ReactNode | any;
+  isedit?: boolean;
+  isdelete?: boolean;
 }
 
-const CrudTable = ({ cols, addForm, data }: busTypes) => {
+const CrudTable = ({ cols, addForm, data, isedit, isdelete }: busTypes) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
+
+  const editHandle = (id: string) => {
+    dispatch(added(id));
+    setOpenModal(true);
+  };
+
+  const colAction: any = [
+    {
+      title: "Action",
+      key: "action",
+      align: "right",
+      render: (_: any, record: any) => (
+        <Space size="middle">
+          {isedit && (
+            <EditOutlined
+              onClick={() => editHandle(record.id)}
+              style={{ color: "blue" }}
+            />
+          )}
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <div>
@@ -35,7 +65,11 @@ const CrudTable = ({ cols, addForm, data }: busTypes) => {
       >
         <div style={{ padding: "1rem" }}>{addForm}</div>
       </Modal>
-      <Table columns={cols} dataSource={data} rowKey={"id"} />
+      <Table
+        columns={[...cols, ...colAction]}
+        dataSource={data}
+        rowKey={"id"}
+      />
     </div>
   );
 };

@@ -8,7 +8,6 @@ const BookTicket = () => {
   const params = useParams();
 
   const [data, setData] = useState<any>();
-  console.log("🚀 ~ file: bookTicket.tsx:11 ~ BookTicket ~ data:", data);
 
   const [messageApi, contextHolder] = message.useMessage();
 

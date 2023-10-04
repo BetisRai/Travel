@@ -10,9 +10,9 @@ import BookTicket from "./pages/bookTicket";
 import DashboardLayout from "./pages/dashboard";
 import ListAvailable from "./pages/listAvailable";
 import { default as UserHomeSearch } from "./pages/user pages/home";
+import TicketList from "./pages/user pages/ticketList";
 import UserHome from "./pages/user pages/userHome";
 import { store } from "./store/store";
-import TicketList from "./pages/user pages/ticketList";
 
 function App() {
   return (

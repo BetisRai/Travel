@@ -7,30 +7,99 @@ import {
   TimePicker,
   message,
 } from "antd";
+import moment from "moment";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { getallbus } from "../service/bus";
-import { addRoutes } from "../service/routes";
+import { addRoutes, addRoutesByid, getRoutesById } from "../service/routes";
+import { RootState } from "../store/store";
+import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 const AddRoutes = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [buses, setBuses] = useState<any>([]);
+  const [busdata, setBusdata] = useState<any>([]);
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
 
-  const onFinish = async (values: any) => {
+  const selectedId = useSelector((state: RootState) => state.edit.id);
+
+  const getRoutes = async (id: string) => {
     try {
-      const res = await addRoutes({
-        busid: values.busid,
-        date: new Date(values.date.$d).toDateString(),
-        fromplace: values.fromplace,
-        toplace: values.toplace,
-        time: new Date(values.time.$d).toLocaleTimeString(),
-        price: values.price,
-        arrival: new Date(values.arrival.$d).toDateString(),
-      });
+      const res = await getRoutesById(id);
       if (res) {
-        messageApi.success("Routes added");
+        form.setFieldsValue({
+          ...res.data[0],
+          date: moment(res.data[0].date),
+          arrival: moment(res.data[0].arrival),
+          time: dayjs(res.data[0].time, "h:mm:ss"),
+        });
+        // setSelectedValues();
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedId) {
+      getRoutes(selectedId);
+    }
+
+    return () => {};
+  }, [selectedId]);
+
+  const onFinish = async (values: any) => {
+    const busname = busdata.filter((val: any) =>
+      val.id === values.busid ? val.busname : false
+    )[0].busname;
+
+    const busno = busdata.filter((val: any) =>
+      val.id === values.busid ? val.busname : false
+    )[0].busno;
+
+    if (selectedId) {
+      try {
+        const res = await addRoutesByid({
+          busid: values.busid,
+          date: new Date(values.date).toDateString(),
+          fromplace: values.fromplace,
+          toplace: values.toplace,
+          time: new Date(values.time).toLocaleTimeString(),
+          price: values.price,
+          arrival: new Date(values.arrival.$d).toDateString(),
+          busname: busname,
+          busnumber: busno,
+          id: selectedId,
+        });
+        if (res) {
+          messageApi.success("Routes updated");
+        }
+        navigate(0);
+      } catch (error: any) {
+        messageApi.error(error.response.data.message);
+      }
+    } else {
+      try {
+        const res = await addRoutes({
+          busid: values.busid,
+          date: new Date(values.date.$d).toDateString(),
+          fromplace: values.fromplace,
+          toplace: values.toplace,
+          time: new Date(values.time.$d).toLocaleTimeString(),
+          price: values.price,
+          arrival: new Date(values.arrival.$d).toDateString(),
+          busname: busname,
+          busnumber: busno,
+        });
+        if (res) {
+          messageApi.success("Routes added");
+          navigate(0);
+        }
+      } catch (error: any) {
+        messageApi.error(error.response.data.message);
+      }
     }
   };
 
@@ -43,6 +112,7 @@ const AddRoutes = () => {
           label: val.busname,
         }));
         setBuses(data);
+        setBusdata(res.data);
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);
@@ -57,10 +127,11 @@ const AddRoutes = () => {
   return (
     <Form
       name="basic"
+      form={form}
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       style={{ maxWidth: 600 }}
-      initialValues={{ remember: true }}
+      initialValues={{}}
       onFinish={onFinish}
       // onFinishFailed={onFinishFailed}
       autoComplete="off"

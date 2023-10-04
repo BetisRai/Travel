@@ -8,6 +8,8 @@ export const addRoutes = async ({
   time,
   price,
   arrival,
+  busname,
+  busnumber,
 }: {
   busid: string;
   fromplace: string;
@@ -16,6 +18,8 @@ export const addRoutes = async ({
   time: string;
   price: string;
   arrival: string;
+  busname: string;
+  busnumber: string;
 }) => {
   try {
     const response = await axios.post("http://localhost:3000/addroutes", {
@@ -26,6 +30,8 @@ export const addRoutes = async ({
       time,
       price,
       arrival,
+      busname,
+      busnumber,
     });
     if (response) {
       return response?.data;
@@ -85,6 +91,54 @@ export const getRoutesById = async (id: string) => {
   try {
     const response = await axios.post("http://localhost:3000/routesbyid", {
       id: id,
+    });
+    if (response) {
+      return response?.data;
+    }
+  } catch (e) {
+    const errors = e as Error | AxiosError;
+    if (!axios.isAxiosError(e)) {
+      throw errors;
+    }
+    throw errors;
+  }
+};
+
+export const addRoutesByid = async ({
+  busid,
+  date,
+  fromplace,
+  toplace,
+  time,
+  price,
+  arrival,
+  busname,
+  busnumber,
+  id,
+}: {
+  busid: string;
+  fromplace: string;
+  toplace: string;
+  date: string;
+  time: string;
+  price: string;
+  arrival: string;
+  busname: string;
+  busnumber: string;
+  id: string;
+}) => {
+  try {
+    const response = await axios.post("http://localhost:3000/addroutesbyid", {
+      busid,
+      date,
+      fromplace,
+      toplace,
+      time,
+      price,
+      arrival,
+      busname,
+      busnumber,
+      id,
     });
     if (response) {
       return response?.data;
