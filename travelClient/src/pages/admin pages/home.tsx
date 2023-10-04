@@ -1,58 +1,53 @@
-import { Bar, BarChart, ResponsiveContainer } from "recharts";
-
-const data = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
+import { message } from "antd";
+import LineChartComp from "../../components/lineChart";
+import { salesdata } from "../../service/dashboard";
+import { useEffect } from "react";
 
 const AdminHome = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+
+  function getDatesOfCurrentWeek() {
+    const today = new Date();
+    const currentDate = new Date(today);
+    const dayOfWeek = today.getDay();
+
+    currentDate.setDate(today.getDate() - dayOfWeek);
+
+    const weekDates = [];
+
+    for (let i = 0; i < 7; i++) {
+      weekDates.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return weekDates;
+  }
+
+  const datesOfCurrentWeek = getDatesOfCurrentWeek();
+
+  const getSalesData = async () => {
+    try {
+      const res = await salesdata();
+      if (res) {
+        console.log(
+          "🚀 ~ file: addbus.tsx:21 ~ getBus ~ res.data[0]:",
+          res.data
+        );
+      }
+    } catch (error: any) {
+      messageApi.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    getSalesData();
+    return () => {};
+  }, []);
+
   return (
     <div>
-      {/* <ResponsiveContainer width="100%" height="100%">
-        <BarChart width={150} height={40} data={data}>
-          <Bar dataKey="uv" fill="#8884d8" />
-        </BarChart>
-      </ResponsiveContainer> */}
+      {contextHolder}
+      <LineChartComp arrays={[1, 2, 3, 4, 5, 6, 7]} />
     </div>
   );
 };

@@ -19,10 +19,6 @@ const AddBus = () => {
         form.setFieldsValue({
           ...res.data[0],
         });
-        console.log(
-          "🚀 ~ file: addbus.tsx:21 ~ getBus ~ res.data[0]:",
-          res.data[0]
-        );
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);

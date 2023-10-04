@@ -11,7 +11,7 @@ exports.buyticket = async (req, res, next) => {
       });
     }
 
-    const insertTicketQuery = ` INSERT INTO tickets (routesid , price, seatcount, totalamount, fromplace, toplace, userid, ticketid) VALUES ($1,$2,$3, $4,$5,$6, $7, $8)`;
+    const insertTicketQuery = ` INSERT INTO tickets (routesid , price, seatcount, totalamount, fromplace, toplace, userid, ticketid, date) VALUES ($1,$2,$3, $4,$5,$6, $7, $8, $9)`;
     const routeUpdate = ` UPDATE routes SET seats = $1 WHERE id = $2`;
     const getRoutesSeats = `SELECT seats FROM routes WHERE id = $1`;
 
@@ -24,6 +24,7 @@ exports.buyticket = async (req, res, next) => {
       req.body.toplace,
       req.body.userid,
       crypto.randomUUID(),
+      new Date().toISOString(),
     ];
 
     const insertResult = await client.query(insertTicketQuery, routesInfo);

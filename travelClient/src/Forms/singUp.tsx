@@ -50,9 +50,7 @@ const SingUp = () => {
     }
   };
 
-  const onFinishFailed = (error: any) => {
-    console.log("enter all the data");
-  };
+  const onFinishFailed = (error: any) => {};
 
   const [openOtp, setOpenOtp] = useState<boolean>(false);
 
