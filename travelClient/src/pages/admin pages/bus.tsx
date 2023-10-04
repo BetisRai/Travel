@@ -1,9 +1,9 @@
-import { DeleteOutlined } from "@ant-design/icons";
-import { Space, message } from "antd";
+import { message } from "antd";
 import { useEffect, useState } from "react";
 import AddBus from "../../Forms/addbus";
 import CrudTable from "../../components/crud";
 import { deletebus, getallbus } from "../../service/bus";
+import { useNavigate } from "react-router-dom";
 
 const columns: any = [
   {
@@ -25,24 +25,8 @@ const columns: any = [
 
 const Bus = () => {
   const [data, setData] = useState<any>([]);
-
+  const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
-
-  const colAction = [
-    {
-      title: "Action",
-      key: "action",
-      align: "right",
-      render: (_: any, record: any) => (
-        <Space size="middle">
-          <DeleteOutlined
-            onClick={() => deleteBus(record.id)}
-            style={{ color: "red" }}
-          />
-        </Space>
-      ),
-    },
-  ];
 
   const getBuses = async () => {
     try {
@@ -60,6 +44,7 @@ const Bus = () => {
       const res = await deletebus({ id: id });
       if (res) {
         messageApi.success("Deleted succesfully");
+        navigate(0);
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);
@@ -75,8 +60,11 @@ const Bus = () => {
     <div>
       {contextHolder}
       <CrudTable
-        cols={[...columns, ...colAction]}
+        cols={[...columns]}
         data={data}
+        isedit
+        isdelete
+        deletefunc={deleteBus}
         addForm={<AddBus />}
       />
     </div>

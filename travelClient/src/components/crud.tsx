@@ -1,4 +1,4 @@
-import { EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Modal, Row, Space, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { useState } from "react";
@@ -11,9 +11,17 @@ interface busTypes {
   addForm?: React.ReactNode | any;
   isedit?: boolean;
   isdelete?: boolean;
+  deletefunc?: (id: string) => void;
 }
 
-const CrudTable = ({ cols, addForm, data, isedit, isdelete }: busTypes) => {
+const CrudTable = ({
+  cols,
+  addForm,
+  data,
+  isedit,
+  isdelete,
+  deletefunc,
+}: busTypes) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const dispatch = useDispatch();
@@ -34,6 +42,15 @@ const CrudTable = ({ cols, addForm, data, isedit, isdelete }: busTypes) => {
             <EditOutlined
               onClick={() => editHandle(record.id)}
               style={{ color: "blue" }}
+            />
+          )}
+
+          {isdelete && (
+            <DeleteOutlined
+              onClick={() => {
+                deletefunc && deletefunc(record.id);
+              }}
+              style={{ color: "red" }}
             />
           )}
         </Space>

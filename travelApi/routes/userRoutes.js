@@ -20,6 +20,9 @@ router
   .post([verifyBus.checkDuplicateBusno], busController.addbus);
 router.route("/deletebus").post(busController.deletebus);
 router.route("/getallbus").get(busController.getallbus);
+router.route("/getbusbyid").post(busController.getbusbyid);
+
+router.route("/addbusbyid").post(busController.addbusbyid);
 
 router.route("/addroutes").post(routesController.addRoutes);
 router.route("/getallroutes").get(routesController.getallRoutes);

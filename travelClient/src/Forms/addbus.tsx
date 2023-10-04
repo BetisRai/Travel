@@ -1,27 +1,79 @@
 import { Button, Form, Input, message } from "antd";
-import { addbus } from "../service/bus";
+import { addbus, addbusbyid, getbusbyid } from "../service/bus";
+import { RootState } from "../store/store";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const AddBus = () => {
   const [messageApi, contextHolder] = message.useMessage();
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
 
-  const onFinish = async (values: any) => {
+  const selectedId = useSelector((state: RootState) => state.edit.id);
+
+  const getBus = async (id: string) => {
     try {
-      const res = await addbus({
-        busname: values.busname,
-        busno: values.busno,
-        seats: values.seats,
-      });
+      const res = await getbusbyid(id);
       if (res) {
-        messageApi.success("Bus added");
+        form.setFieldsValue({
+          ...res.data[0],
+        });
+        console.log(
+          "🚀 ~ file: addbus.tsx:21 ~ getBus ~ res.data[0]:",
+          res.data[0]
+        );
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);
     }
   };
 
+  useEffect(() => {
+    if (selectedId) {
+      getBus(selectedId);
+    }
+
+    return () => {};
+  }, [selectedId]);
+
+  const onFinish = async (values: any) => {
+    if (selectedId) {
+      try {
+        const res = await addbusbyid({
+          busname: values.busname,
+          busno: values.busno,
+          seats: values.seats,
+          id: selectedId,
+        });
+        if (res) {
+          messageApi.success("Bus added");
+        }
+        navigate(0);
+      } catch (error: any) {
+        messageApi.error(error.response.data.message);
+      }
+    } else {
+      try {
+        const res = await addbus({
+          busname: values.busname,
+          busno: values.busno,
+          seats: values.seats,
+        });
+        if (res) {
+          messageApi.success("Bus added");
+        }
+        navigate(0);
+      } catch (error: any) {
+        messageApi.error(error.response.data.message);
+      }
+    }
+  };
+
   return (
     <Form
       name="basic"
+      form={form}
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       style={{ maxWidth: 600 }}

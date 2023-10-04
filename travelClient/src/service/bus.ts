@@ -58,3 +58,50 @@ export const getallbus = async () => {
     throw errors;
   }
 };
+
+export const getbusbyid = async (id: string) => {
+  try {
+    const response = await axios.post("http://localhost:3000/getbusbyid", {
+      id: id,
+    });
+    if (response) {
+      return response?.data;
+    }
+  } catch (e) {
+    const errors = e as Error | AxiosError;
+    if (!axios.isAxiosError(e)) {
+      throw errors;
+    }
+    throw errors;
+  }
+};
+
+export const addbusbyid = async ({
+  busname,
+  busno,
+  seats,
+  id,
+}: {
+  busname: string;
+  busno: string;
+  seats: string;
+  id: string;
+}) => {
+  try {
+    const response = await axios.post("http://localhost:3000/addbusbyid", {
+      busname,
+      busno,
+      seats,
+      id,
+    });
+    if (response) {
+      return response?.data;
+    }
+  } catch (e) {
+    const errors = e as Error | AxiosError;
+    if (!axios.isAxiosError(e)) {
+      throw errors;
+    }
+    throw errors;
+  }
+};
