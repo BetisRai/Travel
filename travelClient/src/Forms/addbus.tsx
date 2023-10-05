@@ -1,9 +1,9 @@
-import { Button, Form, Input, message } from "antd";
-import { addbus, addbusbyid, getbusbyid } from "../service/bus";
-import { RootState } from "../store/store";
+import { Button, Form, Input, InputNumber, message } from "antd";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { addbus, addbusbyid, getbusbyid } from "../service/bus";
+import { RootState } from "../store/store";
 
 const AddBus = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -105,7 +105,7 @@ const AddBus = () => {
         name="seats"
         rules={[{ required: true, message: "Please input your seats" }]}
       >
-        <Input />
+        <InputNumber min={1} max={45} />
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

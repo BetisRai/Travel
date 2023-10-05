@@ -7,7 +7,7 @@ import {
   UploadOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Layout, Menu, Row, Space, theme } from "antd";
+import { Button, Col, Layout, Menu, Row, Space, message, theme } from "antd";
 import React, { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { removeItem } from "../localstorage/storage";
@@ -17,6 +17,8 @@ const { Header, Sider, Content } = Layout;
 const DashboardLayout: React.FC = () => {
   const navigate = useNavigate();
 
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -24,6 +26,7 @@ const DashboardLayout: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
+      {contextHolder}
       <Sider trigger={null} collapsible collapsed={collapsed} theme="light">
         <div
           style={{
@@ -100,8 +103,9 @@ const DashboardLayout: React.FC = () => {
             <Col offset={21}>
               <Button
                 type="default"
-                onClick={() => {
+                onClick={async () => {
                   removeItem("token");
+                  messageApi.info("Logout sucessfully");
                   navigate("/");
                 }}
               >

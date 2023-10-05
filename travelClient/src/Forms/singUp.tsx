@@ -3,12 +3,17 @@ import { Button, Form, Input, Modal, message } from "antd";
 import { singup } from "../service/signup";
 import { useState } from "react";
 import { verifyOtp } from "../service/verifyOtp";
+import { useNavigate } from "react-router-dom";
 
 const SingUp = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [userEmail, setUserEmail] = useState<string>("");
+  const [loading, setloading] = useState(false);
+
+  const navigate = useNavigate();
 
   const onFinish = async (values: signupInterface) => {
+    setloading(true);
     try {
       if (values.password !== values.reEnterPassword) {
         messageApi.error("Password should be same");
@@ -22,15 +27,18 @@ const SingUp = () => {
         number: values.number,
         active: false,
         role: "user",
+        address: values.address,
       });
 
       if (res) {
         setUserEmail(values.userEmail);
         messageApi.success(res.message);
         setOpenOtp(true);
+        setloading(false);
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);
+      setloading(false);
     }
   };
 
@@ -44,6 +52,7 @@ const SingUp = () => {
       if (res) {
         messageApi.success("Activated successfully");
         setOpenOtp(false);
+        navigate(0);
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);
@@ -93,6 +102,13 @@ const SingUp = () => {
           <Input maxLength={10} minLength={10} />
         </Form.Item>
         <Form.Item
+          label="Address"
+          name="address"
+          rules={[{ required: true, message: "Please input your address!" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
           label="Create password"
           name="password"
           rules={[{ required: true, message: "Please input your userEmail!" }]}
@@ -109,7 +125,7 @@ const SingUp = () => {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={loading}>
             Register
           </Button>
         </Form.Item>

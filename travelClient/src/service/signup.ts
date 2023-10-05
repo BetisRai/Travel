@@ -8,6 +8,7 @@ export const singup = async ({
   active,
   role,
   number,
+  address,
 }: signupInterface) => {
   try {
     const response = await axios.post("http://localhost:3000/signup", {
@@ -18,6 +19,7 @@ export const singup = async ({
       active,
       role,
       number,
+      address,
     });
     if (response) {
       return response?.data;

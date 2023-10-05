@@ -6,4 +6,5 @@ interface signupInterface {
   number: string;
   role?: "user";
   active?: boolean;
+  address?: string;
 }

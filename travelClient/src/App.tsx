@@ -13,6 +13,7 @@ import { default as UserHomeSearch } from "./pages/user pages/home";
 import TicketList from "./pages/user pages/ticketList";
 import UserHome from "./pages/user pages/userHome";
 import { store } from "./store/store";
+import Howto from "./pages/howto";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<UserHome />}>
             <Route path="/" element={<UserHomeSearch />} />
+            <Route path="/howto" element={<Howto />} />
             <Route path="/routes" element={<ListAvailable />} />
             <Route path="/routes/:id" element={<BookTicket />} />
             <Route path="/ticketlists/:id" element={<TicketList />} />

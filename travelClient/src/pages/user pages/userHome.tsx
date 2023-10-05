@@ -1,5 +1,5 @@
 import type { MenuProps } from "antd";
-import { Layout, Menu, Modal, Space, theme } from "antd";
+import { Layout, Menu, Modal, Space, message, theme } from "antd";
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import SingUp from "../../Forms/singUp";
@@ -19,13 +19,20 @@ const UserHome: React.FC = () => {
 
   const userType = getItem("user");
 
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [openRegisterModal, setOpenRegisterModal] = useState<boolean>(false);
   const [signinModal, setOpenSigninModal] = useState<boolean>(false);
+
+  // howto
 
   const menuItems: MenuProps["items"] = [
     {
       key: "instruction",
       label: "How to buy Ticket?",
+      onClick: () => {
+        navigate(`/howto`);
+      },
     },
     {
       key: "signin",
@@ -57,6 +64,7 @@ const UserHome: React.FC = () => {
       onClick: () => {
         removeItem("user");
         removeItem("token");
+        navigate("/");
         navigate(0);
       },
     },
@@ -64,7 +72,11 @@ const UserHome: React.FC = () => {
 
   return (
     <Layout>
-      <Space style={{ justifyContent: "space-between" }}>
+      <Space
+        style={{
+          justifyContent: "space-between",
+        }}
+      >
         <div
           onClick={() => {
             navigate("/");
@@ -86,14 +98,16 @@ const UserHome: React.FC = () => {
           <Menu
             mode="horizontal"
             items={menuItems}
-            style={{ width: "100%", backgroundColor: "inherit" }}
+            style={{
+              width: "100%",
+              backgroundColor: "inherit",
+            }}
           />
         </Header>
       </Space>
-      <Layout style={{ minHeight: "60vh" }}>
+      <Layout style={{ minHeight: "85vh" }}>
         <Outlet />
       </Layout>
-
       <Modal
         open={openRegisterModal}
         footer={null}
@@ -105,7 +119,6 @@ const UserHome: React.FC = () => {
           <SingUp />
         </div>
       </Modal>
-
       <Modal
         open={signinModal}
         footer={null}
@@ -117,7 +130,13 @@ const UserHome: React.FC = () => {
           <SingnIn />
         </div>
       </Modal>
-      <Footer>
+
+      <Footer
+        style={{
+          backgroundColor: "#36454F",
+          color: "white",
+        }}
+      >
         <FooterLayout />
       </Footer>
     </Layout>

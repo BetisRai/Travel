@@ -28,13 +28,15 @@ const SingnIn = () => {
         setItem("userid", res.data.id);
         messageApi.success(`Welcome ${res.data.username}`);
         if (res.userType === "admin") {
-          navigate("/admin");
+          navigate("/admin/home");
         } else {
+          navigate("/");
           navigate(0);
         }
       }
       setloading(false);
     } catch (error: any) {
+      setloading(false);
       messageApi.error(error.response.data.message);
     }
   };

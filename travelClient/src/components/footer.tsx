@@ -10,7 +10,7 @@ const FooterLayout = () => {
   return (
     <div>
       <Row justify={"center"}>
-        <Col>Welcome to Travel</Col>
+        <Col>Welcome to Let's Travel</Col>
       </Row>
       <br></br>
       <Row justify={"center"}>

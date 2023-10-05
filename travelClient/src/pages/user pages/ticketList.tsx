@@ -71,11 +71,11 @@ const TicketList = () => {
       });
       if (res) {
         messageApi.success("Cancel ticket sucessfull");
-        navigate("/");
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);
     }
+    navigate(0);
   };
 
   return (
@@ -204,6 +204,8 @@ const TicketList = () => {
               </Form.Item>
             </Form>
           </Modal>
+
+          <br />
         </>
       ))}
       <br />

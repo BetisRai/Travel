@@ -15,6 +15,7 @@ import { getItem } from "../localstorage/storage";
 import { buyTickets } from "../service/tickets";
 import SeatSelect from "./seatSelect";
 import { getUserdata } from "../service/dashboard";
+import { useNavigate } from "react-router-dom";
 
 interface ticketDetailProps {
   busLogo: string;
@@ -51,6 +52,8 @@ const TicketDetail = ({
   const [messageApi, contextHolder] = message.useMessage();
   const [selectedSeat, setselectedSeat] = useState<string>("");
   const [userData, setUserData] = useState<any>();
+
+  const navigate = useNavigate();
 
   const handleAddInsurance = () => {
     setIsInsuranceAdd((prevValue) => !prevValue);
@@ -107,6 +110,7 @@ const TicketDetail = ({
           "_blank",
           "noreferrer"
         );
+        navigate("/");
       }
     } catch (error) {
       messageApi.error("Error");
@@ -209,7 +213,7 @@ const TicketDetail = ({
                       {"Address :"}
                     </Typography.Title>
                     <Typography.Paragraph style={{ zIndex: "1" }}>
-                      {"Kathmandu"}
+                      {userData?.address}
                     </Typography.Paragraph>
                   </Space>
                 </Col>

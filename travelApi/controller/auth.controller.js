@@ -15,7 +15,7 @@ exports.signup = async (req, res, next) => {
 
     const otpGenerated = optGenerator.generateOTP();
 
-    const insertQuery = ` INSERT INTO users (username , useremail, password, role, otp, usernumber,id) VALUES ($1,$2,$3, $4, $5, $6,$7)`;
+    const insertQuery = ` INSERT INTO users (username , useremail, password, role, otp, usernumber,id, address) VALUES ($1,$2,$3, $4, $5, $6,$7, $8)`;
     const userInfo = [
       req.body.userName,
       req.body.userEmail,
@@ -24,6 +24,7 @@ exports.signup = async (req, res, next) => {
       otpGenerated,
       req.body.number,
       crypto.randomUUID(),
+      req.body.address,
     ];
 
     const numberwithcode = `+977${req.body.number}`;
