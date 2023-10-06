@@ -74,9 +74,10 @@ const AddRoutes = () => {
           id: selectedId,
         });
         if (res) {
-          messageApi.success("Routes updated");
+          messageApi.success("Routes updated").then(() => {
+            navigate(0);
+          });
         }
-        navigate(0);
       } catch (error: any) {
         messageApi.error(error.response.data.message);
       }
@@ -94,8 +95,9 @@ const AddRoutes = () => {
           busnumber: busno,
         });
         if (res) {
-          messageApi.success("Routes added");
-          navigate(0);
+          messageApi.success("Routes added").then(() => {
+            navigate(0);
+          });
         }
       } catch (error: any) {
         messageApi.error(error.response.data.message);

@@ -104,13 +104,14 @@ const TicketDetail = ({
         userid: userid ?? "",
       });
       if (res) {
-        messageApi.success("Please pay for the ticket first");
-        window.open(
-          "https://test-pay.khalti.com/?pidx=YPZsoS86PpBh9SCEVMgWHL",
-          "_blank",
-          "noreferrer"
-        );
-        navigate("/");
+        messageApi.success("Please pay for the ticket first").then(() => {
+          window.open(
+            "https://test-pay.khalti.com/?pidx=YPZsoS86PpBh9SCEVMgWHL",
+            "_blank",
+            "noreferrer"
+          );
+          navigate("/");
+        });
       }
     } catch (error) {
       messageApi.error("Error");

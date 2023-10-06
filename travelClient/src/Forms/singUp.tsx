@@ -32,9 +32,10 @@ const SingUp = () => {
 
       if (res) {
         setUserEmail(values.userEmail);
-        messageApi.success(res.message);
-        setOpenOtp(true);
-        setloading(false);
+        messageApi.success(res.message).then(() => {
+          setOpenOtp(true);
+          setloading(false);
+        });
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);
@@ -50,9 +51,10 @@ const SingUp = () => {
       });
 
       if (res) {
-        messageApi.success("Activated successfully");
-        setOpenOtp(false);
-        navigate(0);
+        messageApi.success("Activated successfully").then(() => {
+          setOpenOtp(false);
+          navigate("/");
+        });
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);

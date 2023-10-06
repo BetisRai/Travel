@@ -105,8 +105,9 @@ const DashboardLayout: React.FC = () => {
                 type="default"
                 onClick={async () => {
                   removeItem("token");
-                  messageApi.info("Logout sucessfully");
-                  navigate("/");
+                  messageApi.info("Logout sucessfully").then(() => {
+                    navigate("/");
+                  });
                 }}
               >
                 <Space>

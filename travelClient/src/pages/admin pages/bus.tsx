@@ -43,8 +43,9 @@ const Bus = () => {
     try {
       const res = await deletebus({ id: id });
       if (res) {
-        messageApi.success("Deleted succesfully");
-        navigate(0);
+        messageApi.success("Deleted succesfully").then(() => {
+          navigate(0);
+        });
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);

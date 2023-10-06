@@ -43,9 +43,10 @@ const AddBus = () => {
           id: selectedId,
         });
         if (res) {
-          messageApi.success("Bus added");
+          messageApi.success("Bus added").then(() => {
+            navigate(0);
+          });
         }
-        navigate(0);
       } catch (error: any) {
         messageApi.error(error.response.data.message);
       }
@@ -57,9 +58,10 @@ const AddBus = () => {
           seats: values.seats,
         });
         if (res) {
-          messageApi.success("Bus added");
+          messageApi.success("Bus added").then(() => {
+            navigate(0);
+          });
         }
-        navigate(0);
       } catch (error: any) {
         messageApi.error(error.response.data.message);
       }

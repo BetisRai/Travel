@@ -26,15 +26,16 @@ const SingnIn = () => {
         setItem("token", res.accessToken);
         setItem("user", res.userType);
         setItem("userid", res.data.id);
-        messageApi.success(`Welcome ${res.data.username}`);
-        if (res.userType === "admin") {
-          navigate("/admin/home");
-        } else {
-          navigate("/");
-          navigate(0);
-        }
+        messageApi.success(`Welcome ${res.data.username}`).then(() => {
+          if (res.userType === "admin") {
+            navigate("/admin/home");
+          } else {
+            navigate("/");
+            navigate(0);
+          }
+          setloading(false);
+        });
       }
-      setloading(false);
     } catch (error: any) {
       setloading(false);
       messageApi.error(error.response.data.message);

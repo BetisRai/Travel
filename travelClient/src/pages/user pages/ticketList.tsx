@@ -70,7 +70,9 @@ const TicketList = () => {
         ticketid: ticketid,
       });
       if (res) {
-        messageApi.success("Cancel ticket sucessfull");
+        messageApi.success("Cancel ticket sucessfull").then(() => {
+          navigate(0);
+        });
       }
     } catch (error: any) {
       messageApi.error(error.response.data.message);
