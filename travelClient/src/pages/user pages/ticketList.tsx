@@ -77,7 +77,6 @@ const TicketList = () => {
     } catch (error: any) {
       messageApi.error(error.response.data.message);
     }
-    navigate(0);
   };
 
   return (
